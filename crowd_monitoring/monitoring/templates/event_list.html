@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Crowd Monitoring - Event Setup</h1>
+
+<hr>
+
+<h3>1. Create a New Event</h3>
+<p>Type the name and location details below:</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="create_event">
+
+    <p>
+        Event Name: <br>
+        <input type="text" name="name" required>
+    </p>
+
+    <p>
+        Date: <input type="date" name="date" required> 
+        Time: <input type="time" name="time" required>
+    </p>
+
+    <p>
+        Boundary (long lat, ...): <br>
+        <textarea name="boundary" rows="3" cols="50" required></textarea>
+    </p>
+
+    <input type="submit" value="Save New Event">
+</form>
+
+<br>
+<hr>
+<br>
+
+<h3>2. Add a Zone to an Event</h3>
+<form method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="create_zone">
+
+    <p>
+        Select the Event: <br>
+        <select name="event_id" required>
+            <option value="">-- Choose --</option>
+            {% for event in events %}
+                <option value="{{ event.id }}">{{ event.event_name }}</option>
+            {% endfor %}
+        </select>
+    </p>
+
+    <p>
+        Zone Name: <br>
+        <input type="text" name="zone_name" required>
+    </p>
+
+    <p>
+        Zone Boundary (long lat, ...): <br>
+        <textarea name="zone_boundary" rows="3" cols="50" required></textarea>
+    </p>
+
+    <input type="submit" value="Add Zone">
+</form>
+
+<br>
+<hr>
+<br>
+
+<h3>Current Events List</h3>
+<table border="1" cellpadding="10" style="width:100%; border-collapse: collapse;">
+    <thead>
+        <tr style="background-color: #eeeeee;">
+            <th>Event Name</th>
+            <th>Zones</th>
+            <th>Date</th>
+            <th>Link</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events %}
+        <tr>
+            <td>{{ event.event_name }}</td>
+            <td>
+                {% for zone in event.zones.all %}
+                    {{ zone.zone_name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    None
+                {% endfor %}
+            </td>
+            <td>{{ event.event_date }}</td>
+            <td>
+                <a href="{% url 'dashboard' event.id %}">Open Dashboard</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No events found yet.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+

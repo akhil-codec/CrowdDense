@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Crowd Monitoring{% endblock %}</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <style>
+        /* This tells the browser how big the map should be */
+        #map { 
+            height: 400px; 
+            width: 100%; 
+            border: 2px solid black; 
+        }
+
+        /* Basic page styling */
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+        }
+
+        /* A simple gray bar for the menu */
+        .menu-bar { 
+            background-color: #dddddd; 
+            padding: 10px; 
+            margin-bottom: 20px; ``
+        }
+
+        /* Simple border for sections */
+        .simple-card { 
+            border: 1px solid #ccc; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="menu-bar">
+        <strong>CROWD MONITORING SYSTEM</strong> | 
+        <a href="{% url 'event_list' %}">Home (Events)</a> | 
+        <a href="/admin">Admin Login</a>
+    </div>
+
+    <div class="main-content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>

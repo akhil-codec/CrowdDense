@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Event Dashboard: {{ event.event_name }}</h1>
+
+<p>
+    <b>Date:</b> {{ event.event_date }} <br>
+    <b>Time:</b> {{ event.event_time }}
+</p>
+
+<hr>
+
+<h3>Crowd Statistics</h3>
+<ul>
+    <li>Total Attendees: <b>{{ total_attendees }}</b> (Blue Dots on Map)</li>
+    <li>Total Managers: <b>{{ total_managers }}</b> (Red Dots on Map)</li>
+</ul>
+
+<h3>Zones and Counts</h3>
+<ul>
+    {% for zone in zones %}
+        <li>{{ zone.zone_name }}: {{ zone.current_count }} people</li>
+    {% empty %}
+        <li>No zones have been added to this event yet.</li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h3>Live Map Location</h3>
+<div id="map"></div>
+
+<script>
+    // 1. Setup the map (Centered near GEC Wayanad)
+    var map = L.map('map').setView([{{ event.location_boundary.centroid.y }}, {{ event.location_boundary.centroid.x }}], 16);
+
+    // 2. Load the map tiles (OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    // 3. Get the attendee/manager data from Django
+    var personData = {{ map_data_json|safe }};
+    var markers = [];
+
+    // 4. Draw the dots
+    personData.forEach(function(person) {
+        // Simple color check
+        var dotColor = 'blue';
+        if (person.role == 'manager') {
+            dotColor = 'red';
+        }
+
+        // Draw a circle for each person
+        var circle = L.circleMarker([person.lat, person.lng], {
+            radius: 7,
+            fillColor: dotColor,
+            color: "white",
+            fillOpacity: 0.8
+        }).addTo(map);
+
+        // Save location to zoom the map later
+        markers.push([person.lat, person.lng]);
+    });
+
+    // 5. Automatically zoom the map to show everyone
+    if (markers.length > 0) {
+        map.fitBounds(markers);
+    }
+</script>
+
+{% endblock %}
+
+
