@@ -119,11 +119,6 @@ def dashboard(request, event_id):
     }
     return render(request, 'dashboard.html', context)
 
-def attendee_app(request):
-    # Fetch all events so the user can choose one in the dropdown
-    all_events = Event.objects.all() 
-    return render(request, 'attendee_app.html', {'events': all_events})
-
 
 def get_events_api(request):
     """Returns a list of all events so the Android Spinner can show them."""
