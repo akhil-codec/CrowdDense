@@ -9,12 +9,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
-    # This applies to all 'run' steps in this job
     defaults:
       run:
-        working-directory: ./crowd_monitoring
-
+        working-directory: ./crowd_monitoring  
+    # Service containers to run with this job
     services:
       db:
         image: postgis/postgis:15-3.3-alpine
@@ -24,6 +22,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         ports:
           - 5432:5432
+        # Wait for the database to be ready
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -31,33 +30,34 @@ jobs:
           --health-retries 5
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
     - name: Set up Python 3.12
       uses: actions/setup-python@v5
       with:
         python-version: "3.12"
 
-    - name: Install PostGIS System Libraries
+    - name: Install System Dependencies for PostGIS
       run: |
         sudo apt-get update
-        sudo apt-get install -y binutils libproj-dev gdal-bin libgdal-dev python3-gdal
+        sudo apt-get install -y binutils libproj-dev gdal-bin libgdal-dev
 
-    - name: Install Dependencies
+    - name: Install Pipenv and Dependencies
       run: |
         pip install pipenv
         pipenv install --system --deploy
 
     - name: Run Tests
       env:
+        # Pass GitHub Secrets into the environment
         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        # Note: In CI, the DB is at 'localhost' because ports are mapped
+        DATABASE_URL: postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/${{ secrets.POSTGRES_DB }}
         TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
         TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
         TWILIO_PHONE_NUMBER: ${{ secrets.TWILIO_PHONE_NUMBER }}
-        DJANGO_SETTINGS_MODULE: crowd_monitoring.settings 
+        DJANGO_SETTINGS_MODULE: crowd_monitoring.settings
       run: |
         python manage.py test
