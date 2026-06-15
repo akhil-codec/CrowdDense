@@ -34,7 +34,7 @@ Admins can view active monitored events, delete old ones, or set up entirely new
 
 ### 3. Live Geospatial Dashboard
 The core feature of the portal. It maps attendees (blue dots) and managers (red dots) in real-time within the defined event zones. It calculates and displays the live density (`current_count`) for each specific sector (e.g., Stage 2, Auditorium, Main Ground).
-![Live Dashboard](images/dashboard_page.jpg)
+![Live Dashboard](images/dashboard_page.png)
 
 ### 4. Alert Broadcasting
 If a zone breaches safe capacity limits, admins can use this interface to dispatch targeted Twilio SMS emergency broadcasts to either Attendees or Managers currently inside that specific area.
