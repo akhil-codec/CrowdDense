@@ -19,6 +19,26 @@ The user interface of admin side and attendee registration are created using fig
 
 ---
 
+## System Architecture & Data Flow
+
+### Architecture Diagram
+![System Architecture](images/System_Architecture.png)
+*A three-tier architecture illustrating the Presentation Tier (Android apps & Admin Web UI), Logic Tier (Django REST API, APScheduler for background tasks, and Geospatial Engine), Data Tier (PostgreSQL + PostGIS), and integrations with External Services (Twilio SMS and OpenStreetMap).*
+
+### Data Flow Diagrams (DFD)
+
+#### Level 0 DFD (Context Diagram)
+![Level 0 DFD](images/Crowd_0_DFD.png)
+*Context-level diagram showing the core Crowd Density Monitoring System and its high-level data exchanges with external entities: Attendees, Managers, and Admins.*
+
+#### Level 1 DFD
+![Level 1 DFD](images/Crowd_1_DFD.png)
+*Breakdown of the primary system processes: Registration (1.0), Tracking (2.0), Analysis (3.0), and Alerts (4.0), alongside their interactions with the Master Database.*
+
+#### Level 2 DFD
+![Level 2 DFD](images/Crowd_2_DFD.drawio.png)
+*A granular view detailing internal processes such as identity verification, event boundary setup, GPS signal collection, linking attendees to map zones, continuous people counting, safety limit comparisons, and the triggering of warning messages to managers and attendees.*
+
 ## Tech Stack
 * **Backend**: Python 3.x, Django 5.x, PostgreSQL/PostGIS.
 * **Mobile**: Java, Android SDK, Android Studio.

@@ -21,6 +21,7 @@ WORKDIR /app
 # Install dependencies using Pipenv
 RUN pip install pipenv
 COPY Pipfile Pipfile.lock /app/
-RUN pipenv install --system --deploy --dev
+RUN pipenv install --system --deploy
+
 # Copy project files
 COPY . /app/

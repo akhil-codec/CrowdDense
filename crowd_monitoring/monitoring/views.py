@@ -412,8 +412,9 @@ def invite_share(request, event_id):
         
     event = get_object_or_404(Event, id=event_id)
     
-    attendee_link = "https://github.com/akhil-codec/CrowdDense/blob/main/APK/Attendee_Registration_App/Attendee-Registration.apk"
-    manager_link =  "https://github.com/akhil-codec/CrowdDense/blob/main/APK/Manager_Registration_App/manager-registration.apk"
+    attendee_link = "https://southbound-earle-pressuringly.ngrok-free.dev/"
+    manager_link = "https://southbound-earle-pressuringly.ngrok-free.dev/"
+       
     context = {
         'event': event,
         'attendee_link': attendee_link,
